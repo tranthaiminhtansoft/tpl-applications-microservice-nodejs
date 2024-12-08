@@ -1,0 +1,27 @@
+include:
+  - project: devops-adoption-framework/pipeline-library/gitlab-library
+    ref: main
+    file:
+      - workflows/ci/ci-nodejs-docker.yml
+
+default:
+  tags:
+    - docker
+
+stages:
+  - test
+  - security checks
+  - build
+  - package and publish
+
+variables:
+  APP_NAME: "nodejs-hello-world"
+
+  NODE_RUNNER_IMAGE: "registry.hub.docker.com/library/node:20.9.0-alpine3.17"
+  KANIKO_RUNNER_IMAGE: "gcr.io/kaniko-project/executor:v1.14.0-debug"
+  SONAR_SCANNER_IMAGE: "registry.hub.docker.com/sonarsource/sonar-scanner-cli:11"
+
+  LINT_JOB: "true"
+  UNIT_TEST_JOB: "true"
+
+  LINT_CHECK_PATH: "${CI_PROJECT_DIR}/scripts/lint_check.sh"
